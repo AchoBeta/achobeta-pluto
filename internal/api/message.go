@@ -81,7 +81,7 @@ func GetMessage(c *gin.Context) {
 
 	// 响应
 	if err != nil {
-		response.NewResponse(c).Error(response.PARAM_NOT_VALID)
+		response.Response(c, resp, err)
 		return
 	} else {
 		response.NewResponse(c).Success(resp)
@@ -107,7 +107,7 @@ func MarkReadMessage(c *gin.Context) {
 
 	// 响应
 	if err != nil {
-		response.NewResponse(c).Error(response.PARAM_NOT_VALID)
+		response.Response(c, resp, err)
 		return
 	} else {
 		response.NewResponse(c).Success(resp)
@@ -136,7 +136,7 @@ func SendMessage(c *gin.Context) {
 
 	// 响应
 	if err != nil {
-		response.NewResponse(c).Error(response.PARAM_NOT_VALID)
+		response.Response(c, resp, err)
 		return
 	} else {
 		response.NewResponse(c).Success(resp)
