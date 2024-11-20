@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"tgwp/global"
 	"tgwp/internal/repo"
+	"tgwp/internal/response"
 	"tgwp/internal/types"
 	"tgwp/log/zlog"
 	"tgwp/util/snowflake"
@@ -22,6 +23,7 @@ func (l *MessageLogic) SetMessage(req types.SetMessageReq) (resp types.SetMessag
 	node, err := snowflake.NewNode(global.DEFAULT_NODE_ID)
 	if err != nil {
 		zlog.Errorf("create snowflake node error:%v", err)
+		err = response.ErrResp(err, response.INTERNAL_ERROR)
 		return
 	}
 	// 生成雪花ID
@@ -30,6 +32,7 @@ func (l *MessageLogic) SetMessage(req types.SetMessageReq) (resp types.SetMessag
 	message, err := repo.NewMessageRepo(global.DB).CreateMessage(id, req.Content, req.Type)
 	if err != nil {
 		zlog.Errorf("create message error:%v", err)
+		err = response.ErrResp(err, response.INTERNAL_ERROR)
 		return
 	} else {
 		zlog.Infof("create message success, id:%d , content:\"%s\", type:%d", message.ID, message.Content, message.Type)
@@ -45,6 +48,7 @@ func (l *MessageLogic) JoinMessage(req types.JoinMessageReq, UserID int64) (resp
 	node, err := snowflake.NewNode(global.DEFAULT_NODE_ID)
 	if err != nil {
 		zlog.Errorf("create snowflake node error:%v", err)
+		err = response.ErrResp(err, response.INTERNAL_ERROR)
 		return
 	}
 
@@ -63,6 +67,7 @@ func (l *MessageLogic) JoinMessage(req types.JoinMessageReq, UserID int64) (resp
 	user_message, err := repo.NewMessageRepo(global.DB).CreateUserMessage(id, req.MessageID, UserID)
 	if err != nil {
 		zlog.Errorf("create message error:%v", err)
+		err = response.ErrResp(err, response.INTERNAL_ERROR)
 		return
 	} else {
 		zlog.Infof("create message success, user_id:%d, message_id:%d", user_message.UserID, user_message.MessageID)
@@ -76,10 +81,14 @@ func (l *MessageLogic) JoinMessage(req types.JoinMessageReq, UserID int64) (resp
 func (l *MessageLogic) GetMessage(UserID int64, pageStr string, timestampStr string) (resp types.GetMessageResp, err error) {
 	page, err := strconv.Atoi(pageStr)
 	if err != nil {
+		zlog.Errorf("param page error:%v", err)
+		err = response.ErrResp(err, response.PARAM_TYPE_ERROR)
 		return
 	}
 	timestamp, err := strconv.ParseInt(timestampStr, 10, 64)
 	if err != nil {
+		zlog.Errorf("param timestamp error:%v", err)
+		err = response.ErrResp(err, response.PARAM_TYPE_ERROR)
 		return
 	}
 	fmt.Println(timestamp)
@@ -102,7 +111,7 @@ func (l *MessageLogic) GetMessage(UserID int64, pageStr string, timestampStr str
 	return
 }
 
-func (l *MessageLogic) MarkReadMessage(req types.MarkReadMessageReq) (resp types.JoinMessageResp, err error) {
+func (l *MessageLogic) MarkReadMessage(req types.MarkReadMessageReq) (resp types.MarkReadMessageResp, err error) {
 	// 判断信息是否存在
 	//is_exist := repo.NewMessageRepo(global.DB).CheckUserMessageExist(req.UserMessageID)
 	//if is_exist == false {
@@ -116,6 +125,7 @@ func (l *MessageLogic) MarkReadMessage(req types.MarkReadMessageReq) (resp types
 
 	if err != nil {
 		zlog.Errorf("mark read error:%v", err)
+		err = response.ErrResp(err, response.INTERNAL_ERROR)
 		return
 	} else {
 		zlog.Infof("mark read success, user_message_id:%d", req.UserMessageID)

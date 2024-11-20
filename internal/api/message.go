@@ -2,7 +2,6 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"strconv"
 	"tgwp/global"
 	"tgwp/internal/logic"
 	"tgwp/internal/response"
@@ -16,6 +15,8 @@ func SetMessage(c *gin.Context) {
 	ctx := zlog.GetCtxFromGin(c)
 	req, err := types.BindReq[types.SetMessageReq](c)
 	if err != nil {
+		zlog.CtxErrorf(ctx, "BindReq failed: %v", err)
+		err = response.ErrResp(err, response.INTERNAL_ERROR)
 		return
 	}
 	zlog.CtxInfof(ctx, "Casbin request: %v", req)
@@ -25,7 +26,7 @@ func SetMessage(c *gin.Context) {
 
 	// 响应
 	if err != nil {
-		response.NewResponse(c).Error(response.PARAM_NOT_VALID)
+		response.Response(c, resp, err)
 		return
 	} else {
 		response.NewResponse(c).Success(resp)
@@ -39,21 +40,21 @@ func JoinMessage(c *gin.Context) {
 	ctx := zlog.GetCtxFromGin(c)
 	req, err := types.BindReq[types.JoinMessageReq](c)
 	if err != nil {
+		zlog.CtxErrorf(ctx, "BindReq failed: %v", err)
+		err = response.ErrResp(err, response.INTERNAL_ERROR)
 		return
 	}
-	UserID, _ := c.Get(global.TOKEN_USER_ID)
-	user_id, err := strconv.ParseInt(UserID.(string), 10, 64)
-	if err != nil {
-		return
-	}
+	TempUserID, _ := c.Get(global.TOKEN_USER_ID)
+	UserID := TempUserID.(int64)
+
 	zlog.CtxInfof(ctx, "Casbin request: %v", req)
 
 	// logic 层处理
-	resp, err := logic.NewMessageLogic().JoinMessage(req, user_id)
+	resp, err := logic.NewMessageLogic().JoinMessage(req, UserID)
 
 	// 响应
 	if err != nil {
-		response.NewResponse(c).Error(response.PARAM_NOT_VALID)
+		response.Response(c, resp, err)
 		return
 	} else {
 		response.NewResponse(c).Success(resp)
@@ -64,23 +65,19 @@ func JoinMessage(c *gin.Context) {
 
 // GetMessage 获取消息, 从 [消息表] 获取
 func GetMessage(c *gin.Context) {
-	//fmt.Println(util.GenToken(util.TokenData{Userid: "114514", Class: "atoken", Issuer: "1", Time: time.Hour * 24 * 365}))
-
+	//fmt.Println(util.GenToken(util.TokenData{Userid: 114514, Class: "atoken", Issuer: "", Time: time.Hour * 24 * 365}))
 	// 解析请求参数
 	ctx := zlog.GetCtxFromGin(c)
-	UserID, _ := c.Get(global.TOKEN_USER_ID)
-	user_id, err := strconv.ParseInt(UserID.(string), 10, 64)
-	if err != nil {
-		return
-	}
+	TempUserID, _ := c.Get(global.TOKEN_USER_ID)
+	UserID := TempUserID.(int64)
 
 	pageStr := c.DefaultQuery("page", "1")
 	timestampStr := c.DefaultQuery("timestamp", "0")
 
-	zlog.CtxInfof(ctx, "Casbin request: %v %v %v", user_id, pageStr, timestampStr)
+	zlog.CtxInfof(ctx, "Casbin request: %v %v %v", UserID, pageStr, timestampStr)
 
 	// logic 层处理
-	resp, err := logic.NewMessageLogic().GetMessage(user_id, pageStr, timestampStr)
+	resp, err := logic.NewMessageLogic().GetMessage(UserID, pageStr, timestampStr)
 
 	// 响应
 	if err != nil {
@@ -99,6 +96,8 @@ func MarkReadMessage(c *gin.Context) {
 	ctx := zlog.GetCtxFromGin(c)
 	req, err := types.BindReq[types.MarkReadMessageReq](c)
 	if err != nil {
+		zlog.Errorf("BindReq failed: %v", err)
+		err = response.ErrResp(err, response.INTERNAL_ERROR)
 		return
 	}
 	zlog.CtxInfof(ctx, "Casbin request: %v", req)
@@ -123,17 +122,17 @@ func SendMessage(c *gin.Context) {
 	ctx := zlog.GetCtxFromGin(c)
 	req, err := types.BindReq[types.SendMessageReq](c)
 	if err != nil {
+		zlog.CtxErrorf(ctx, "BindReq failed: %v", err)
+		err = response.ErrResp(err, response.INTERNAL_ERROR)
 		return
 	}
-	UserID, _ := c.Get(global.TOKEN_USER_ID)
-	user_id, err := strconv.ParseInt(UserID.(string), 10, 64)
-	if err != nil {
-		return
-	}
+	TempUserID, _ := c.Get(global.TOKEN_USER_ID)
+	UserID := TempUserID.(int64)
+
 	zlog.CtxInfof(ctx, "Casbin request: %v", req)
 
 	// logic 层处理
-	resp, err := logic.NewMessageLogic().SendMessage(req, user_id)
+	resp, err := logic.NewMessageLogic().SendMessage(req, UserID)
 
 	// 响应
 	if err != nil {
