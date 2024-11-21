@@ -74,5 +74,16 @@ func (r SignRepo) CheckUserId(phone string) (int64, error) {
 	return Temp.UserId, nil
 }
 
-//查找对应的Issuer并修改，自己退出登录
-//根据LoginId修改issuer,被别人下线
+// DeleteSign
+//
+//	@Description: 查找对应的Issuer并删除，自己退出登录
+//	@receiver r
+//	@param issuer
+//	@return err
+func (r SignRepo) DeleteSign(issuer string) (err error) {
+	var Temp model.Sign
+	err = r.DB.Table(SignTableName).Where(fmt.Sprintf("%s=?", Issuer), issuer).Delete(&Temp).Error
+	return
+}
+
+//根据LoginId删除信息,被别人下线

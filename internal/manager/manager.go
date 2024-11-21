@@ -21,6 +21,7 @@ type RouteManager struct {
 	TeamRoutes    *gin.RouterGroup // 团队信息相关的路由组
 	CommonRoutes  *gin.RouterGroup //特殊功能相关的路由组
 	MessageRoutes *gin.RouterGroup // 消息相关的路由组
+	DevicesRoutes *gin.RouterGroup // 展示常用设备页面相关操作路由
 }
 
 // NewRouteManager 创建一个新的 RouteManager 实例，包含各业务功能的路由组
@@ -31,6 +32,7 @@ func NewRouteManager(router *gin.Engine) *RouteManager {
 		TeamRoutes:    router.Group("/api/team"),    // 初始化团队信息路由组
 		CommonRoutes:  router.Group("/api/common"),  //通用功能相关的路由组
 		MessageRoutes: router.Group("/api/message"), //通用功能相关的路由组
+		DevicesRoutes: router.Group("/api/devices"), // 展示常用设备页面相关操作路由
 	}
 }
 
@@ -54,6 +56,11 @@ func (rm *RouteManager) RegisterCommonRoutes(handler PathHandler) {
 	handler(rm.CommonRoutes)
 }
 
+// 展示常用设备页面相关操作路由
+func (rm *RouteManager) RegisterDevicesRoutes(handler PathHandler) {
+	handler(rm.DevicesRoutes)
+}
+
 // RegisterMiddleware 根据组名为对应的路由组注册中间件
 // group 参数为 "login"、"profile"、"team"或"Common"，分别对应不同的路由组
 func (rm *RouteManager) RegisterMiddleware(group string, middleware Middleware) {
@@ -66,6 +73,8 @@ func (rm *RouteManager) RegisterMiddleware(group string, middleware Middleware) 
 		rm.TeamRoutes.Use(middleware())
 	case "common":
 		rm.CommonRoutes.Use(middleware())
+	case "devices":
+		rm.DevicesRoutes.Use(middleware())
 	}
 }
 

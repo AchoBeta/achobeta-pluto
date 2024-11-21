@@ -60,8 +60,14 @@ func registerRoutes(routeManager *manager.RouteManager) {
 		})
 		//是否可以自动登录
 		rg.POST("/auto", api.CheckAutoLogin)
+		//用户自行退出登录
+		rg.DELETE("/exit", api.ExitSystem)
 	})
 
+	// 展示常用设备页面相关操作路由
+	routeManager.RegisterDevicesRoutes(func(rg *gin.RouterGroup) {
+
+	})
 	// 个人信息相关路由
 	routeManager.RegisterProfileRoutes(func(rg *gin.RouterGroup) {
 
@@ -73,25 +79,49 @@ func registerRoutes(routeManager *manager.RouteManager) {
 	})
 
 	// 团队信息相关路由
-	//由于思凯未完成，影响程序运行，先注释掉
-	//routeManager.RegisterTeamRoutes(func(rg *gin.RouterGroup) {
-	//	//验证令牌
-	//	//util.IdentifyToken()
-	//
-	//	//解析 jwt，获取 user_id
-	//	//util.ParseToken()
-	//
-	//	//获得权限组
-	//	rg.GET("/power", api.GetPower())
-	//
-	//	// 团队成员管理子路由
-	//	memberGroup := rg.Group("/structure")
-	//	memberGroup.Use(middleware.PermissionMiddleware()) // 权限校验中间件
-	//	{
-	//		memberGroup.GET("/collection", api.GetTeamStructure())
-	//	}
-	//})
+	routeManager.RegisterTeamRoutes(func(rg *gin.RouterGroup) {
 
+		//解析 jwt，获取 user_id
+		rg.Use(middleware.ReflashAtoken())
+
+		//获得权限组
+		rg.GET("/power", api.GetPower)
+
+		// 团队架构管理子路由
+		TeamStructure := rg.Group("/structure")
+		{
+			//检验权限
+			TeamStructure.Use(middleware.PermissionMiddleware())
+			// 获取 完整团队架构
+			TeamStructure.GET("/collection", api.GetTeamStructure)
+			//保存 更改了的节点信息
+			TeamStructure.PUT("/change", api.PutTeamNode)
+			//新增团队
+			TeamStructure.POST("/add", api.CreateTeam)
+		}
+
+		// 团队成员列表子路由
+		MemberList := rg.Group("/memberlist")
+		{
+			//查询团队列表--用户基础信息
+			MemberList.GET("/get", api.GetTeamMemberlist)
+			//新增用户
+			MemberList.POST("/post", middleware.PermissionMiddleware(), api.CreateTeamMember)
+			//删除用户
+			MemberList.DELETE("/delete", middleware.PermissionMiddleware(), api.DeleteTeamMember)
+		}
+
+		// 团队成员信息管理子路由
+		MemberMsg := rg.Group("/membermsg")
+		{
+			//查询用户详细信息
+			MemberMsg.GET("/details", api.GetMemberDetail)
+			//给用户点赞/取消赞
+			MemberMsg.PUT("/like", api.PutLikeCount)
+			//编辑用户信息
+			MemberMsg.PUT("/save", middleware.PermissionMiddleware(), api.PutTeamMember)
+		}
+	})
 }
 
 // messageRoutes 注册消息相关路由的具体处理函数
@@ -101,6 +131,5 @@ func messageRoutes(routeManager *manager.RouteManager) {
 		rg.POST("/join", middleware.ReflashAtoken(), api.JoinMessage)
 		rg.GET("/get", middleware.ReflashAtoken(), api.GetMessage)
 		rg.POST("/markread", api.MarkReadMessage)
-		rg.POST("/send", middleware.ReflashAtoken(), api.SendMessage)
 	})
 }
