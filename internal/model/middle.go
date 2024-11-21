@@ -8,9 +8,9 @@ type Team_Member_Structure struct {
 	StructureId int64 `gorm:"column:structure_id; type:bigint; index; not null; comment:'职位ID'"`
 
 	// 外键关联
-	Team      Team      `gorm:"foreignKey:TeamId; references:ID"`
-	Member    Member    `gorm:"foreignKey:MemberId; references:ID"`
-	Structure Structure `gorm:"foreignKey:StructureId; references:ID"`
+	Team      Team      `gorm:"foreignKey:TeamId; references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	Member    Member    `gorm:"foreignKey:MemberId; references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	Structure Structure `gorm:"foreignKey:StructureId; references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 }
 
 func (t *Team_Member_Structure) TableName() string {
@@ -25,10 +25,25 @@ type User_Power struct {
 	Level    int   `gorm:"column:level;     type:int; index;not null; default:1; comment:'权限等级'"`
 
 	// 外键关联
-	Member Member `gorm:"foreignKey:MemberId; references:ID"`
-	Team   Team   `gorm:"foreignKey:TeamId; references:ID"`
+	Member Member `gorm:"foreignKey:MemberId; references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	Team   Team   `gorm:"foreignKey:TeamId; references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 }
 
 func (t *User_Power) TableName() string {
 	return "user_power"
+}
+
+// 点赞表
+type Like_Status struct {
+	CommonModel
+	IsLiked         bool  `gorm:"column:is_liked; type:boolean; index; comment:'点赞情况'"`
+	MemberId_Like   int64 `gorm:"column:memberid_like; type:int unsigned ; index; comment:'点赞的用户id'"`
+	MemberId_BeLike int64 `gorm:"column:memberid_belike; type:int unsigned; index; comment:'被点赞的用户id'"`
+
+	Member_Like   Member `gorm:"foreignKey:MemberId_Like;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	Member_BeLike Member `gorm:"foreignKey:MemberId_BeLike;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+}
+
+func (t *Like_Status) TableName() string {
+	return "like_status"
 }

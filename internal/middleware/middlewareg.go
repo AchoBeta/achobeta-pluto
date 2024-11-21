@@ -15,7 +15,6 @@ func AddTraceId() gin.HandlerFunc {
 		// 获取请求头中的 Trace ID
 		traceID := c.GetHeader("X-Request-ID")
 		if traceID == "" {
-
 			// 如果没有 Trace ID，生成一个新的,  默认节点为 1
 			node, _ := snowflake.NewNode(global.DEFAULT_NODE_ID)
 			traceID = node.Generate().String()
@@ -30,25 +29,3 @@ func AddTraceId() gin.HandlerFunc {
 		c.Next()
 	}
 }
-
-// 权限校验中间件：检查用户是否有权限访问某个资源
-//由于思凯未完成，影响程序运行，先注释掉
-//func PermissionMiddleware() gin.HandlerFunc {
-//	return func(c *gin.Context) {
-//		// GetUserPermissions 检查用户权限
-//		userPermissions := GetUserPermissions(c)
-//
-//		if userPermissions == nil {
-//		}
-//
-//		c.Next() // 继续处理请求
-//	}
-//}
-
-// GetUserPermissions 获取用户权限组
-//由于思凯未完成，影响程序运行，先注释掉
-//func GetUserPermissions(c *gin.Context) []string {
-//userid := c.GetInt64("user_id")
-//teamid := c.GetInt64("team_id")
-//data := repo.NewCasbinRepo().Getcasbin(userid,teamid)
-//}

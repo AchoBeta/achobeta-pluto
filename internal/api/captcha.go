@@ -19,7 +19,7 @@ func GetCode(c *gin.Context) {
 		return
 	}
 	zlog.CtxInfof(ctx, "GetCode request: %v", req)
-	err = logic.NewCodeLogic().GenCode(c, req)
+	err = logic.NewCodeLogic().GenCode(ctx, req)
 	response.Response(c, nil, err)
 	return
 }
