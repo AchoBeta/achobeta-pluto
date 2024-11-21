@@ -19,6 +19,12 @@ const (
 	ROOT_ID                  = 1     // 根节点 ID
 	NORMAL_ADMINISTRATOR     = 22222 //普通管理员
 	SUPERL_ADMINISTRATOR     = 33333 //超级管理员
+  FEISHU_APP_ID                 = "cli_a7a37dc364b2900c"             // 飞书自建应用ID
+	FEISHU_APP_SECRET             = "cqFNuZmHaIKlMeFAr8546cHlaquXw8ep" // 飞书自建应用Secret
+	FEISHU_APP_TOKEN              = "M5l2bHYEiaYq2esmVM1cTyamn5s"      // 飞书自建应用Token
+	FEISHU_TASK_TABLE_ID          = "tblM1AuOpuhpxBSb"                 //飞书多维表格任务表ID
+	FEISHU_LIST_UPDATE_TIME       = 60 * 5                             // 飞书任务表更新频率(秒 int格式)
+	FEISHU_LIST_WILL_OVERDUE_TIME = 60 * 60 * 24                       // 飞书任务表即将逾期时间(秒 int格式)
 )
 
 var Node, _ = snowflake.NewNode(DEFAULT_NODE_ID)

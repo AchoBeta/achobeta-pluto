@@ -22,6 +22,7 @@ type RouteManager struct {
 	CommonRoutes  *gin.RouterGroup //特殊功能相关的路由组
 	MessageRoutes *gin.RouterGroup // 消息相关的路由组
 	DevicesRoutes *gin.RouterGroup // 展示常用设备页面相关操作路由
+	FeiShuRoutes  *gin.RouterGroup // 飞书相关的路由组
 }
 
 // NewRouteManager 创建一个新的 RouteManager 实例，包含各业务功能的路由组
@@ -33,6 +34,7 @@ func NewRouteManager(router *gin.Engine) *RouteManager {
 		CommonRoutes:  router.Group("/api/common"),  //通用功能相关的路由组
 		MessageRoutes: router.Group("/api/message"), //通用功能相关的路由组
 		DevicesRoutes: router.Group("/api/devices"), // 展示常用设备页面相关操作路由
+		FeiShuRoutes:  router.Group("/api/feishu"),  //飞书相关的路由组}
 	}
 }
 
@@ -59,6 +61,14 @@ func (rm *RouteManager) RegisterCommonRoutes(handler PathHandler) {
 // 展示常用设备页面相关操作路由
 func (rm *RouteManager) RegisterDevicesRoutes(handler PathHandler) {
 	handler(rm.DevicesRoutes)
+// HandleMessageRoutes 处理消息相关的路由处理函数
+func (rm *RouteManager) HandleMessageRoutes(handler PathHandler) {
+	handler(rm.MessageRoutes)
+}
+
+// HandleFeiShuRoutes 处理飞书相关的路由处理函数
+func (rm *RouteManager) HandleFeiShuRoutes(handler PathHandler) {
+	handler(rm.FeiShuRoutes)
 }
 
 // RegisterMiddleware 根据组名为对应的路由组注册中间件
@@ -83,9 +93,4 @@ func RequestGlobalMiddleware(r *gin.Engine) {
 	r.Use(requestid.New())
 	r.Use(middleware.AddTraceId())
 	r.Use(middleware.Cors())
-}
-
-// HandleMessageRoutes 处理消息相关的路由处理函数
-func (rm *RouteManager) HandleMessageRoutes(handler PathHandler) {
-	handler(rm.MessageRoutes)
 }

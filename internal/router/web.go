@@ -35,6 +35,7 @@ func listen() (*gin.Engine, error) {
 	// 注册各业务路由组的具体路由
 	registerRoutes(routeManager)
 	messageRoutes(routeManager)
+	feiShuRoutes(routeManager)
 
 	return r, nil
 }
@@ -131,5 +132,12 @@ func messageRoutes(routeManager *manager.RouteManager) {
 		rg.POST("/join", middleware.ReflashAtoken(), api.JoinMessage)
 		rg.GET("/get", middleware.ReflashAtoken(), api.GetMessage)
 		rg.POST("/markread", api.MarkReadMessage)
+	})
+}
+
+// feiShuRoutes 有关飞书多维表格的路由
+func feiShuRoutes(routeManager *manager.RouteManager) {
+	routeManager.HandleFeiShuRoutes(func(rg *gin.RouterGroup) {
+		rg.GET("/get", middleware.ReflashAtoken(), api.GetFeiShuList)
 	})
 }
