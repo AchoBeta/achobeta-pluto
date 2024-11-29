@@ -75,7 +75,7 @@ func (l *CodeLogic) GenLoginData(ctx context.Context, req types.PhoneReq, ip, us
 	resp.Ip = ip
 	resp.UserAgent = user_agent
 	if req.AutoLogin {
-		issuer := snowflake.GenId(node)
+		issuer := snowflake.GetString12Id(node)
 		resp.Atoken, err = util.GenToken(util.FullToken(global.AUTH_ENUMS_ATOKEN, issuer, user_id))
 		resp.Rtoken, err = util.GenToken(util.FullToken(global.AUTH_ENUMS_RTOKEN, issuer, user_id))
 		//将点了自动登录的用户的信息插入签名表

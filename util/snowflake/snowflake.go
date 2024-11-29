@@ -10,7 +10,7 @@ import (
 
 var (
 	// Epoch 是 Twitter 的 Snowflake 时间戳初始时间（毫秒），设为 2010 年 11 月 4 日 01:42:54 UTC
-	// 您可以根据需要自定义初始时间。
+	// 根据需要自定义初始时间。
 	Epoch int64 = 1288834974657
 
 	// NodeBits 表示用于节点（Node）的位数
@@ -122,9 +122,26 @@ func (f ID) Int64() int64 {
 	return int64(f)
 }
 
-// ParseInt64 将 int64 转换为 Snowflake ID
-func ParseInt64(id int64) ID {
-	return ID(id)
+// Get12Id 生成 12 位整数形式的 ID
+func GetInt12Id(node *Node) int64 {
+	id := node.Generate().Int64()
+
+	// 获取高位时间戳部分
+	timestampPart := id >> 22           // 提取时间戳高位（42 位）
+	timestampPart = timestampPart % 1e6 // 取时间戳后 6 位
+
+	// 获取低位节点和步数部分
+	lowPart := id & ((1 << 22) - 1) // 取低 22 位
+	lowPart = lowPart % 1e6         // 取低位后 6 位
+
+	// 合并高位和低位部分，组成 12 位整数
+	result := timestampPart*1e6 + lowPart
+
+	// 如果超出 12 位，则取模确保是 12 位整数
+	if result >= 1e12 {
+		result = result % 1e12
+	}
+	return result
 }
 
 // String 返回 Snowflake ID 的字符串表示
@@ -132,32 +149,26 @@ func (f ID) String() string {
 	return strconv.FormatInt(int64(f), 10)
 }
 
-// ParseString 将字符串转换为 Snowflake ID
-func ParseString(id string) (ID, error) {
-	i, err := strconv.ParseInt(id, 10, 64)
-	return ID(i), err
-}
-
-// Node 返回 Snowflake ID 的节点号
-// 以下函数将在未来版本中移除。
-func (f ID) Node() int64 {
-	return int64(f) & nodeMask >> nodeShift
-}
-
-// Step 返回 Snowflake ID 的步数（或序列号）
-// 以下函数将在未来版本中移除。
-func (f ID) Step() int64 {
-	return int64(f) & stepMask
-}
-
-// MarshalJSON 返回 Snowflake ID 的 JSON 字节数组表示
-func (f ID) MarshalJSON() ([]byte, error) {
-	buff := make([]byte, 0, 22)
-	buff = append(buff, '"')
-	buff = strconv.AppendInt(buff, int64(f), 10)
-	buff = append(buff, '"')
-	return buff, nil
-}
 func GenId(node *Node) string {
 	return node.Generate().String()
+}
+
+// GetString12Id 生成 12 位字符串形式的 ID
+func GetString12Id(node *Node) string {
+	id := node.Generate().Int64()
+
+	timestampPart := id >> 22
+	timestampPart = timestampPart % 1e6
+
+	lowPart := id & ((1 << 22) - 1)
+	lowPart = lowPart % 1e6
+
+	// 合并高低部分，组成 12 位字符串
+	result := fmt.Sprintf("%06d%06d", timestampPart, lowPart)
+
+	// 如果超出 12 位，则截取前 12 位
+	if len(result) > 12 {
+		result = result[:12]
+	}
+	return result
 }

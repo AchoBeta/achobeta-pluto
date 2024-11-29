@@ -3,6 +3,7 @@ package model
 import (
 	"gorm.io/gorm"
 	"tgwp/global"
+	"tgwp/util/snowflake"
 	"time"
 )
 
@@ -17,7 +18,7 @@ type CommonModel struct {
 func (b *CommonModel) BeforeCreate(db *gorm.DB) error {
 	// 生成雪花ID
 	if b.ID == 0 {
-		b.ID = global.Node.Generate().Int64()
+		b.ID = snowflake.GetInt12Id(global.Node)
 	}
 
 	return nil
