@@ -126,31 +126,32 @@ Please delete useless import. You can also use the shortcut key ctrl + alt + o t
 
 ## Todo List
 - [x] Project Initialization
-    - [x] Project Initialization
-    - [x] Project Directory Structure
-    - [x] Project Configuration File
-    - [x] Project Global Variables and Constants
-    - [x] Project Log Configuration
-    - [x] Project Initialization File
+  - [x] Project Initialization
+  - [x] Project Directory Structure
+  - [x] Project Configuration File
+  - [x] Project Global Variables and Constants
+  - [x] Project Log Configuration
+  - [x] Project Initialization File
 - [x] Gin Module Setup
-    - [x] Gin Framework Setup
-    - [x] Gin Routing Setup
-    - [x] Gin Middleware Setup
-    - [x] Gin Parameter Binding
-    - [x] Gin Response Data Encapsulation
+  - [x] Gin Framework Setup
+  - [x] Gin Routing Setup
+  - [x] Gin Middleware Setup
+  - [x] Gin Parameter Binding
+  - [x] Gin Response Data Encapsulation
 - [x] Login and Registration Module
-    - [x] Login and Logout functionality
-    - [x] Auto-login within 30 days
-    - [x] Force logout
-    - [x] Display commonly used devices
+  - [x] Login and Logout functionality
+  - [x] Auto-login within 30 days
+  - [x] Force logout
+  - [x] Display commonly used devices
 - [x] Team Homepage Module
-    - [x] Personal Center
-    - [x] Points Overview
-    - [x] Message Module
-    - [x] Feishu Multi-dimensional Table
+  - [x] Personal Center
+  - [x] Points Overview
+  - [x] Message Module
+  - [x] Feishu Multi-dimensional Table
 - [x] Team Information Module
-    - [x] Like personal information
-    - [x] User list
-    - [x] Add new user
-    - [x] Admin team structure management
-    - [x] View and edit user information details
+  - [x] Like personal information
+  - [x] User list
+  - [x] Add new user
+  - [x] Admin team structure management
+  - [x] View and edit user information details
+
