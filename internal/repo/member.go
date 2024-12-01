@@ -165,9 +165,9 @@ func (r *MemberRepo) GetMemberlistRepo(TeamId int64, Page, Perpage int) (types.M
 	var TotalCount int64
 	// 查询该团队的总成员数量
 	err = r.DB.Table("team_member_structure").
+		Select("COUNT(DISTINCT team_member_structure.member_id) AS total_count").
 		Where("team_member_structure.deleted_at IS NULL AND team_member_structure.team_id = ?", TeamId).
-		Select("DISTINCT team_member_structure.member_id").
-		Count(&TotalCount).
+		Scan(&TotalCount).
 		Error
 
 	//在查询后将 Positions 的逗号分隔值拆分为切片： 查询 当前用户所处团队的每个职位名称
