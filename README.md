@@ -125,32 +125,32 @@ Please delete useless import. You can also use the shortcut key ctrl + alt + o t
 3. Never use `git push --force` unless you know what you are doing.
 
 ## Todo List
-- [ ] Project Initialization
-    - [ ] Project Initialization
-    - [ ] Project Directory Structure
-    - [ ] Project Configuration File
-    - [ ] Project Global Variables and Constants
-    - [ ] Project Log Configuration
-    - [ ] Project Initialization File
-- [ ] Gin Module Setup
-    - [ ] Gin Framework Setup
-    - [ ] Gin Routing Setup
-    - [ ] Gin Middleware Setup
-    - [ ] Gin Parameter Binding
-    - [ ] Gin Response Data Encapsulation
-- [ ] Login and Registration Module
-    - [ ] Login and Logout functionality
-    - [ ] Auto-login within 30 days
-    - [ ] Force logout
-    - [ ] Display commonly used devices
-- [ ] Team Homepage Module
-    - [ ] Personal Center
-    - [ ] Points Overview
-    - [ ] Message Module
-    - [ ] Feishu Multi-dimensional Table
-- [ ] Team Information Module
-    - [ ] Like personal information
-    - [ ] User list
-    - [ ] Add new user
-    - [ ] Admin team structure management
-    - [ ] View and edit user information details
+- [x] Project Initialization
+  - [x] Project Initialization
+  - [x] Project Directory Structure
+  - [x] Project Configuration File
+  - [x] Project Global Variables and Constants
+  - [x] Project Log Configuration
+  - [x] Project Initialization File
+- [x] Gin Module Setup
+  - [x] Gin Framework Setup
+  - [x] Gin Routing Setup
+  - [x] Gin Middleware Setup
+  - [x] Gin Parameter Binding
+  - [x] Gin Response Data Encapsulation
+- [x] Login and Registration Module
+  - [x] Login and Logout functionality
+  - [x] Auto-login within 30 days
+  - [x] Force logout
+  - [x] Display commonly used devices
+- [x] Team Homepage Module
+  - [x] Personal Center
+  - [x] Points Overview
+  - [x] Message Module
+  - [x] Feishu Multi-dimensional Table
+- [x] Team Information Module
+  - [x] Like personal information
+  - [x] User list
+  - [x] Add new user
+  - [x] Admin team structure management
+  - [x] View and edit user information details

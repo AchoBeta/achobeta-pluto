@@ -1,32 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="@123.207.73.185" uuid="043fa705-5aa2-42ca-a806-509b48695b72">
+    <data-source source="LOCAL" name="@117.72.97.101" uuid="04fcae31-472f-4d60-b386-f675ae08e2ee">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://123.207.73.185:13306</jdbc-url>
+      <jdbc-url>jdbc:mysql://117.72.97.101:3307</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="mydatabase@123.207.73.185" uuid="2121e91a-3c84-46b2-ab5b-e12bf8c3b498">
-      <driver-ref>mysql.8</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://123.207.73.185:13306/mydatabase</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
-    <data-source source="LOCAL" name="@47.239.233.134" uuid="11d52150-1476-42ee-800d-f2b26630b1d2">
-      <driver-ref>mysql.8</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://47.239.233.134:3307/</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
-    <data-source source="LOCAL" name="0@47.239.233.134" uuid="8174a755-e977-4c85-a0bd-d923121fce2d">
+    <data-source source="LOCAL" name="0@117.72.97.101" uuid="d477c98d-5b21-4e45-803f-3fd2345013bc">
       <driver-ref>redis</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>jdbc.RedisDriver</jdbc-driver>
-      <jdbc-url>jdbc:redis://47.239.233.134:6379/0</jdbc-url>
+      <jdbc-url>jdbc:redis://117.72.97.101:6379/0</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
