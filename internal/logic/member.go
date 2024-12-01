@@ -49,7 +49,6 @@ func (l *MemberLogic) GetMemberList(ctx context.Context, req types.MemberlistReq
 			zlog.Errorf("用户列表查询失败: %v", err)
 			return nil, response.ErrResp(err, codeUsersFoundField)
 		}
-
 	}
 
 	return &users, nil
@@ -63,10 +62,10 @@ func (l *MemberLogic) GetMemberList(ctx context.Context, req types.MemberlistReq
 //	@param req
 //	@return resp
 //	@return err
-func (l *MemberLogic) GetMemberDetail(ctx context.Context, req types.GetMemberDetailReq) (resp *types.GetMemberDetailResp, err error) {
+func (l *MemberLogic) GetMemberDetail(ctx context.Context, UserId, MemberId int64) (resp *types.GetMemberDetailResp, err error) {
 	defer util.RecordTime(time.Now())()
 
-	resp, err = repo.NewMemberRepo(global.DB).GetMemberDetail(req.MemberID)
+	resp, err = repo.NewMemberRepo(global.DB).GetMemberDetail(UserId, MemberId)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			zlog.CtxWarnf(ctx, "user not found: %v", err)

@@ -68,7 +68,7 @@ func PermissionMiddleware() gin.HandlerFunc {
 		c.Request.Body = io.NopCloser(bytes.NewReader(bodyBytes))
 
 		// 类型断言为包含 UserId 和 TeamId 的结构体
-		//var userId int64   正式使用时需删除
+		//var userId int64 //正式使用时需删除
 		var teamId int64
 
 		switch v := req.(type) {

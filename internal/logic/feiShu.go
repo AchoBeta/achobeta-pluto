@@ -31,9 +31,9 @@ func (l *FeiShuLogic) GetFeiShuList(ctx context.Context, UserID int64, ForceUpda
 		zlog.Errorf("get feishu open_id error:%v", err)
 		return
 	}
-	var OpenID string
-	// 去获取openid
-	if len(member.FeiShuOpenID) <= 0 {
+	OpenID := member.FeiShuOpenID
+	// 如果open_id为空，则获取
+	if len(OpenID) <= 0 {
 		OpenID, err = GetFeiShuUserOpenID(member.PhoneNum)
 		member.FeiShuOpenID = OpenID
 		if err != nil {
@@ -179,6 +179,9 @@ func UpdateFeiShuList(ctx context.Context) (err error) {
 	// 总任务数
 	// 解析数据
 	for _, item := range recordResp.Data.Items {
+		if len(item.Fields.TaskName) <= 0 { //空任务不算
+			continue
+		}
 		nameList[item.Fields.WorkBy[0].ID] = item.Fields.WorkBy[0].Name
 		TotalTaskCnt[item.Fields.WorkBy[0].ID]++
 		if item.Fields.TaskStatus != "已完成" {
@@ -243,6 +246,7 @@ func GetFeiShuList(ctx context.Context, openID string) (resp types.GetFeiShuList
 	OverdueTaskCountStr, err4 := global.Rdb.Get(ctx, fmt.Sprintf(REDIS_FEISHU_OVERDUE_TASK_CNT, openID)).Result()
 	combinedErr := errors.Join(err1, err2, err3, err4)
 	if combinedErr != nil {
+		fmt.Println(openID)
 		zlog.CtxErrorf(ctx, "Unable to get redis feishu data")
 		err = response.ErrResp(err, response.INTERNAL_ERROR)
 		return

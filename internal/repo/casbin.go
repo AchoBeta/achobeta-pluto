@@ -109,6 +109,8 @@ func (r CasbinRepo) queryURLs(roles []int64, teamid int64) ([]string, error) {
 //	@param teamId
 //	@return bool
 //	@return error
+const SUPERMANGER_ID = 33333
+
 func (r CasbinRepo) CheckUserPermission(url string, userId, teamId int64) (bool, error) {
 	defer util.RecordTime(time.Now())()
 
@@ -120,11 +122,9 @@ func (r CasbinRepo) CheckUserPermission(url string, userId, teamId int64) (bool,
 	var roles []string
 	err := r.DB.Model(&model.Casbin{}).
 		Select(RoleOrUrl). // 获取 g 规则中的 roleid
-		Where(&model.Casbin{
-			Ptype: "g",
-			V0:    userId,
-			V1:    teamId,
-		}).
+		Where("(casbin.ptype = ? AND casbin.v0 = ? AND casbin.v1 = ?) OR (casbin.ptype = ? AND casbin.v0 = ? AND casbin.v1 = ?)",
+			"g", userId, teamId, // 指定团队角色
+			"g", userId, 1). // 默认团队角色（team_id = 1）
 		Find(&roles).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -134,8 +134,6 @@ func (r CasbinRepo) CheckUserPermission(url string, userId, teamId int64) (bool,
 		return false, err
 	}
 
-	fmt.Println(roles)
-
 	var managers []int64
 	for _, role := range roles {
 		//将string类型转化为 int64
@@ -143,6 +141,10 @@ func (r CasbinRepo) CheckUserPermission(url string, userId, teamId int64) (bool,
 		if err != nil {
 			//转换失败
 			return false, err
+		}
+		if manager == SUPERMANGER_ID {
+			//说明 这个用户 是超级管理员，直接验证成功
+			return true, nil
 		}
 		managers = append(managers, manager)
 	}

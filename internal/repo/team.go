@@ -73,8 +73,9 @@ func (r TeamRepo) CreateTeam(TeamName string) (*types.CreateTeamResp, error) {
 		CommonModel: model.CommonModel{
 			ID: 22222,
 		},
-		Name:     "普通管理员",
-		PhoneNum: "22222",
+		Name:       "普通管理员",
+		CreateDate: time.Now(),
+		PhoneNum:   "22222",
 	}
 	//创建普通管理员
 	err = r.DB.Model(&model.Member{}).
@@ -89,8 +90,9 @@ func (r TeamRepo) CreateTeam(TeamName string) (*types.CreateTeamResp, error) {
 		CommonModel: model.CommonModel{
 			ID: 33333,
 		},
-		Name:     "超级管理员",
-		PhoneNum: "33333",
+		Name:       "超级管理员",
+		CreateDate: time.Now(),
+		PhoneNum:   "33333",
 	}
 	//创建超级管理员
 	err = r.DB.Model(&model.Member{}).

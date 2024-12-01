@@ -17,6 +17,7 @@ type TeamStructure struct {
 
 // 查询团队架构（出参）
 type TeamStructResp struct {
+	RootOfTeam     int64           `json:"root_of_team"`
 	TeamStructures []TeamStructure `json:"team_structures"` // 团队架构记录的数组
 }
 
