@@ -6,7 +6,7 @@ import (
 )
 
 func RandomCode() string {
-	const charset = "0123456789"
+	const charset = "0123456789abcdefghijklmnopqrlstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	result := make([]byte, 6)
 	rand.Seed(time.Now().UnixNano())
 	for i := range result {
