@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"tgwp/internal/logic"
 	"tgwp/internal/response"
-	"tgwp/internal/types"
 	"tgwp/log/zlog"
 )
 
@@ -19,7 +18,7 @@ func GetUserDetail(c *gin.Context) {
 	UserID := logic.GetUserId(c)
 
 	// 直接使用团队用户获取详细信息的函数
-	resp, err := logic.NewMemberLogic().GetMemberDetail(ctx, types.GetMemberDetailReq{MemberID: UserID})
+	resp, err := logic.NewMemberLogic().GetMemberDetail(ctx, UserID, UserID)
 	response.Response(c, resp, err)
 
 	return

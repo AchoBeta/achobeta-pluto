@@ -15,12 +15,15 @@ import (
 func GetMemberDetail(c *gin.Context) {
 	ctx := zlog.GetCtxFromGin(c)
 
+	//正式使用，测试时需注释掉
+	UserId := logic.GetUserId(c)
+
 	req, err := types.BindReq[types.GetMemberDetailReq](c)
 	if err != nil {
 		return
 	}
 	zlog.CtxInfof(ctx, "GetMemberDetail request: %v", req)
-	resp, err := logic.NewMemberLogic().GetMemberDetail(ctx, req)
+	resp, err := logic.NewMemberLogic().GetMemberDetail(ctx, UserId, req.MemberID)
 	// 更加人性化的response返回，这样减少重复代码的书写
 	response.Response(c, resp, err)
 

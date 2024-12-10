@@ -50,7 +50,6 @@ func CreateTeam(c *gin.Context) {
 	req, err := types.BindReq[types.CreateTeamReq](c)
 	if err != nil {
 		zlog.CtxErrorf(ctx, "CreateTeam err:%v", err)
-		response.NewResponse(c).Error(response.PARAM_NOT_VALID)
 		return
 	}
 	zlog.CtxInfof(ctx, "CreateTeam request: %v", req)

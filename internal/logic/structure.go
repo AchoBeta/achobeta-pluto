@@ -69,7 +69,7 @@ func (l *StructureLogic) GetStructure(ctx context.Context, req types.TeamStructR
 		}
 	}
 
-	return &types.TeamStructResp{TeamStructures: teamStructures}, nil
+	return &types.TeamStructResp{RootOfTeam: Root, TeamStructures: teamStructures}, nil
 }
 
 // GetStructure

@@ -21,6 +21,7 @@ type Members struct {
 // 查询指定团队成员列表（出参）
 type MemberlistResp struct {
 	Members []Members `json:"members"`
+	Total   int64     `json:"total"`
 }
 
 // 新增成员（入参）

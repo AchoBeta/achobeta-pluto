@@ -33,7 +33,7 @@ func NewMemberRepo(db *gorm.DB) *MemberRepo {
 //	@return *types.GetMemberDetailResp
 //	@return error
 
-func (r *MemberRepo) GetMemberDetail(userID int64) (*types.GetMemberDetailResp, error) {
+func (r *MemberRepo) GetMemberDetail(UserId, MemberId int64) (*types.GetMemberDetailResp, error) {
 	var resp types.GetMemberDetailResp
 
 	var positions []struct {
@@ -49,7 +49,7 @@ func (r *MemberRepo) GetMemberDetail(userID int64) (*types.GetMemberDetailResp, 
 		Select(`member.name, member.sex, DATE_FORMAT(member.create_date, '%Y-%m-%d') AS create_date, member.id_card, 
 				member.phone_num, member.email, member.grade, member.major, 
 				member.student_id, member.experience, member.status, member.like_count`).
-		Where("id = ?", userID).
+		Where("id = ?", MemberId).
 		First(&resp).
 		Error
 	if err != nil {
@@ -65,7 +65,7 @@ func (r *MemberRepo) GetMemberDetail(userID int64) (*types.GetMemberDetailResp, 
 		Joins("JOIN team ON team.id = team_member_structure.team_id").
 		Joins("JOIN structure ON structure.id = team_member_structure.structure_id").
 		Joins("JOIN user_power ON user_power.member_id = team_member_structure.member_id AND user_power.team_id = team_member_structure.team_id").
-		Where("team_member_structure.member_id = ?", userID).
+		Where("team_member_structure.member_id = ?", MemberId).
 		Find(&positions).
 		Error
 	if err != nil {
@@ -95,6 +95,38 @@ func (r *MemberRepo) GetMemberDetail(userID int64) (*types.GetMemberDetailResp, 
 	for _, pos := range positionMap {
 		resp.MemberPosition = append(resp.MemberPosition, *pos)
 	}
+
+	//查询 用户对该成员的点赞情况,默认为没有点赞
+	var IsLiked int8 = FALSE
+
+	err = r.DB.Model(&model.Like_Status{}).
+		Select("is_liked").
+		Where(&model.Like_Status{
+			MemberId_Like:   UserId,
+			MemberId_BeLike: MemberId,
+		}).
+		First(&IsLiked).
+		Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			// 没有找到记录的情况,说明该表还没有相关数据
+			// 创建数据
+			err = r.DB.Model(&model.Like_Status{}).
+				Create(&model.Like_Status{
+					MemberId_Like:   UserId,
+					MemberId_BeLike: MemberId,
+					IsLiked:         FALSE,
+				}).Error
+			if err != nil {
+				zlog.Errorf("初始化点赞表失败：%v", err)
+				return nil, err
+			}
+		} else {
+			zlog.Errorf("对该成员点赞情况查询失败：%v", err)
+			return nil, err
+		}
+	}
+	resp.IsLiked = IsLiked
 
 	return &resp, nil
 }
@@ -130,6 +162,14 @@ func (r *MemberRepo) GetMemberlistRepo(TeamId int64, Page, Perpage int) (types.M
 		Find(&Members).
 		Error
 
+	var TotalCount int64
+	// 查询该团队的总成员数量
+	err = r.DB.Table("team_member_structure").
+		Select("COUNT(DISTINCT team_member_structure.member_id) AS total_count").
+		Where("team_member_structure.deleted_at IS NULL AND team_member_structure.team_id = ?", TeamId).
+		Scan(&TotalCount).
+		Error
+
 	//在查询后将 Positions 的逗号分隔值拆分为切片： 查询 当前用户所处团队的每个职位名称
 	for i, member := range Members {
 		Members[i].PositionList = strings.Split(member.Positions, ",")
@@ -139,7 +179,7 @@ func (r *MemberRepo) GetMemberlistRepo(TeamId int64, Page, Perpage int) (types.M
 		zlog.Errorf("查询用户简单信息失败")
 		return types.MemberlistResp{}, err
 	}
-	return types.MemberlistResp{Members: Members}, nil
+	return types.MemberlistResp{Members: Members, Total: TotalCount}, nil
 }
 
 // CreateMember

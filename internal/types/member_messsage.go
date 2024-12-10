@@ -36,6 +36,7 @@ type GetMemberDetailResp struct {
 	Experience     string            `json:"experience"`
 	Status         string            `json:"status"`
 	LikeCount      uint64            `json:"like_count"`
+	IsLiked        int8              `json:"is_liked"`
 	MemberPosition []MemberPositions `json:"member_position"`
 }
 
